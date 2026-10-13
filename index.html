@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Star Pro - Ultimate Master 100%</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body id="appBody">
+    <div class="app-container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">✕</button>
+            <span class="project-title">VIDEO STAR PRO - 100% ULTIMATE</span>
+            <div class="header-actions">
+                <button class="header-btn" onclick="shareVideoLink()">🔗</button>
+                <button class="header-btn" onclick="exportVideo()">📥</button>
+                <button class="header-btn trash-btn" onclick="deleteCurrentMedia()">🗑️</button>
+            </div>
+        </div>
+
+        <div class="preview-screen">
+            <div class="video-preview-box ratio-9-16" id="previewBox">
+                <span class="placeholder-text" id="previewText">Màn hình Preview (9:16)</span>
+                <div id="layerOverlay" class="layer-overlay"></div>
+            </div>
+        </div>
+
+        <div class="effect-status" id="effectStatus">✨ Sẵn sàng sáng tạo Video Star đỉnh cao!</div>
+
+        <div class="timeline-container">
+            <div class="timeline-layer music-layer">
+                <span class="layer-name">🎵 AUDIO WAVEFORM & BEAT SYNC</span>
+                <div class="waveform-box" onclick="addBeatMarker(event)">
+                    <div class="beat-marker" style="left: 15%;"></div>
+                    <div class="beat-marker" style="left: 38%;"></div>
+                    <div class="beat-marker" style="left: 62%;"></div>
+                    <div class="beat-marker" style="left: 85%;"></div>
+                </div>
+            </div>
+            <div class="timeline-layer video-layer">
+                <span class="layer-name">🎬 MULTI-LAYER TRACKS</span>
+                <div class="clips-track">
+                    <div class="clip-item">Media 1</div>
+                    <div class="clip-item active">Media 2 (Active)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="tool-btn highlight-code" onclick="triggerImportQR()">📷 NHẬP CODE</button>
+            <button class="tool-btn highlight" onclick="openModal('slotManagerModal')">🗂️ QUẢN LÝ Ô (1-100)</button>
+            <button class="tool-btn highlight" onclick="openModal('createCodeModal')">🛠️ TẠO CODE RIÊNG</button>
+            <button class="tool-btn highlight" onclick="openModal('zoomModal')">🔍 THU/PHÓNG</button>
+            <button class="tool-btn highlight" onclick="openModal('photoToVideoModal')">🎞️ ẢNH SANG VIDEO</button>
+            <button class="tool-btn" onclick="openModal('trimModal')">✂️ CẮT VIDEO</button>
+            <button class="tool-btn" onclick="openModal('menuBgModal')">🖼️ ĐỔI ẢNH MENU</button>
+            <button class="tool-btn" onclick="openTextPrompt()">🔤 VĂN BẢN</button>
+            <button class="tool-btn" onclick="openModal('iconModal')">🏷️ ICON/STICKER</button>
+            <button class="tool-btn" onclick="openModal('d3Modal')">📦 3D</button>
+            <button class="tool-btn" onclick="openModal('mirrorModal')">🪞 GƯƠNG</button>
+            <button class="tool-btn" onclick="openModal('templateModal')">🔥 MẪU</button>
+            <button class="tool-btn" onclick="openModal('motionModal')">🚀 DI CHUYỂN</button>
+            <button class="tool-btn" onclick="openModal('fxModal')">✨ FX</button>
+            <button class="tool-btn" onclick="openModal('colorModal')">🎨 MÀU</button>
+            <button class="tool-btn" onclick="openModal('transitionModal')">🎞️ CHUYỂN CẢNH</button>
+            <button class="tool-btn" onclick="openModal('aspectModal')">📐 KHUNG</button>
+            <button class="tool-btn" onclick="openModal('speedModal')">⏳ TỐC ĐỘ</button>
+            <button class="tool-btn" onclick="openModal('chromaModal')">🟢 XOÁ PHÔNG</button>
+            <button class="tool-btn" onclick="triggerImportMedia()">📂 NHẬP MEDIA</button>
+        </div>
+
+        <input type="file" id="mediaFileInput" accept="image/*,video/*" style="display: none;" onchange="processMediaFile(event)">
+        <input type="file" id="qrFileInput" accept="image/*" style="display: none;" onchange="processQRImage(event)">
+        <input type="file" id="slotMediaInput" accept="image/*,video/*" style="display: none;" onchange="assignSlotMedia(event)">
+        <input type="file" id="menuBgInput" accept="image/*" style="display: none;" onchange="changeMenuBackground(event)">
+
+        <div id="slotManagerModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🗂️ Phân bổ Media vào Ô Code (1 - 100)</h3>
+                    <button onclick="closeModal('slotManagerModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="slot-grid" id="slotGridContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="createCodeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🛠️ Tạo & Quản Lý Code Hiệu Ứng</h3>
+                    <button onclick="closeModal('createCodeModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <label style="font-size:10px; color:#ff4d94;">Tiêu đề Code:</label>
+                    <input type="text" id="customCodeTitleInput" placeholder="Ví dụ: Beat Shake Pro" style="width:100%; padding:8px; background:#2b2b3d; border:1px solid #3d3d5c; color:white; border-radius:6px; margin-bottom:8px; font-size:11px;">
+                    <textarea id="customCodeScriptInput" placeholder="Nhập thông số..." style="width:100%; height:50px; padding:8px; background:#2b2b3d; border:1px solid #3d3d5c; color:white; border-radius:6px; margin-bottom:8px; font-size:11px;"></textarea>
+                    <button class="effect-option" style="background:#ff4d94; text-align:center;" onclick="saveCustomCode()">💾 Lưu Code Mới</button>
+                    <button class="effect-option" style="background:#3b3b52; text-align:center;" onclick="editCustomCodeTitle()">✏️ Sửa Tiêu Đề Code</button>
+                    <button class="effect-option" style="background:#523b3b; text-align:center;" onclick="deleteCustomCode()">🗑️ Xóa Code</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="photoToVideoModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🎞️ Hiệu Ứng Từ Ảnh Sang Video</h3>
+                    <button onclick="closeModal('photoToVideoModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <button class="effect-option" onclick="applyPhotoToVideo('Fade Transition Slideshow')">🌟 Fade Transition Slideshow</button>
+                    <button class="effect-option" onclick="applyPhotoToVideo('Beat Sync Photo Flip')">⚡ Beat Sync Photo Flip</button>
+                    <button class="effect-option" onclick="applyPhotoToVideo('Zoom Pan Dynamic Video')">🚀 Zoom Pan Dynamic Video</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="trimModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✂️ Cắt Gọt Đoạn Video</h3>
+                    <button onclick="closeModal('trimModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <button class="effect-option" onclick="applyTrim('Cắt bỏ đoạn đầu video')">✂️ Cắt bỏ đoạn đầu</button>
+                    <button class="effect-option" onclick="applyTrim('Cắt khúc giữa trọng tâm')">✂️ Lấy khúc giữa trọng tâm</button>
+                    <button class="effect-option" onclick="applyTrim('Cắt gọn đoạn cuối video')">✂️ Cắt gọn đoạn cuối</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="zoomModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔍 Thu / Phóng Khung Hình</h3>
+                    <button onclick="closeModal('zoomModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <button class="effect-option" onclick="applyZoom(0.7)">🔍 Thu nhỏ (0.7x)</button>
+                    <button class="effect-option" onclick="applyZoom(1.0)">⏹️ Chuẩn (1.0x)</button>
+                    <button class="effect-option" onclick="applyZoom(1.3)">🔎 Phóng to (1.3x)</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="iconModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🏷️ Kho Icon & Sticker</h3><button onclick="closeModal('iconModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyIconSticker('⭐ Ngôi sao')">⭐ Ngôi sao</button><button class="effect-option" onclick="applyIconSticker('💖 Trái tim')">💖 Trái tim</button></div></div></div>
+        <div id="d3Modal" class="modal"><div class="modal-content"><div class="modal-header"><h3>📦 Hiệu Ứng 3D</h3><button onclick="closeModal('d3Modal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="apply3DEffect('3D Cube Rotate')">🧊 3D Cube Rotate</button></div></div></div>
+        <div id="mirrorModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🪞 Hiệu Ứng Gương</h3><button onclick="closeModal('mirrorModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyMirrorEffect('Horizontal Mirror')">↔️ Gương lật ngang</button></div></div></div>
+        <div id="templateModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🔥 Mẫu Có Sẵn</h3><button onclick="closeModal('templateModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyTemplate('Beat Flash Pro')">⚡ Beat Flash Pro</button></div></div></div>
+        <div id="motionModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🚀 Ảnh Di Chuyển Vào</h3><button onclick="closeModal('motionModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyImageMotion('Zoom In Bounce')">🔍 Zoom In Bounce</button></div></div></div>
+        <div id="fxModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>✨ Hiệu ứng FX</h3><button onclick="closeModal('fxModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyEffect('Zoom & Shake')">🌀 Zoom & Shake</button></div></div></div>
+        <div id="colorModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🎨 Bộ lọc màu</h3><button onclick="closeModal('colorModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyColorFilter('Neon Pink Glow')">💖 Neon Pink Glow</button></div></div></div>
+        <div id="transitionModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🎞️ Chuyển cảnh</h3><button onclick="closeModal('transitionModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyTransition('Smooth Zoom In')">🔍 Smooth Zoom In</button></div></div></div>
+        <div id="aspectModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>📐 Khung hình</h3><button onclick="closeModal('aspectModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="changeAspect('ratio-1-1', 'Khung Vuông (1:1)')">⬛ Khung Vuông (1:1)</button><button class="effect-option" onclick="changeAspect('ratio-9-16', 'Khung Dài (9:16)')">📱 Khung Dài (9:16)</button></div></div></div>
+        <div id="speedModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>⏳ Tốc độ video</h3><button onclick="closeModal('speedModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applySpeed('Siêu chậm 0.2x')">🐢 Siêu chậm (0.2x)</button></div></div></div>
+        <div id="chromaModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🟢 Xóa Phông Xanh</h3><button onclick="closeModal('chromaModal')">✕</button></div><div class="modal-body"><button class="effect-option" onclick="applyChromaKey('Green Screen Auto-Remove')">🟢 Xóa phông xanh lá tự động</button></div></div></div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+          </html>
+  
